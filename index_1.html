@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Salam</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Caveat:wght@500&family=DM+Sans:wght@400;500&display=swap"
+    />
+
+    <style>
+      /* ---------- Colors and fonts (change these to restyle everything) ---------- */
+      :root {
+        --night: #1c1928;
+        --paper: #f4ebdf;
+        --lamp: #f3b97f;
+        --muted: #a69dba;
+        --display: "Instrument Serif", Georgia, serif;
+        --hand: "Caveat", cursive;
+        --body: "DM Sans", system-ui, sans-serif;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        background:
+          radial-gradient(
+            120% 70% at 85% -10%,
+            rgba(243, 185, 127, 0.25),
+            transparent 60%
+          ),
+          var(--night);
+        color: var(--paper);
+        font-family: var(--body);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        box-sizing: border-box;
+        cursor: pointer;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* ---------- The words ---------- */
+      #word {
+        font-family: var(--display);
+        font-size: clamp(34px, 9vw, 56px);
+        line-height: 1.15;
+        text-align: center;
+        max-width: 14em;
+        margin: 0;
+      }
+
+      /* fade-up each time the word changes */
+      .pop {
+        animation: pop 0.7s ease-out;
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      #hint {
+        position: fixed;
+        bottom: 28px;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+
+      /* ---------- The ending ---------- */
+      #ending {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+        width: 100%;
+        max-width: 440px;
+      }
+      #ending h1 {
+        font-family: var(--display);
+        font-weight: 400;
+        font-size: clamp(30px, 8vw, 44px);
+        line-height: 1.1;
+        margin: 0;
+      }
+      #ending h1 em {
+        color: var(--lamp);
+      }
+      #ending .extra {
+        color: var(--muted);
+        font-size: 15px;
+        margin: 4px 0 0;
+      }
+      #ending .sign {
+        font-family: var(--hand);
+        font-size: 30px;
+        color: var(--lamp);
+        margin: 0;
+      }
+
+      #ending h1,
+      #ending p {
+        animation: pop 1s ease-out both;
+      }
+      #ending h1:nth-of-type(2) {
+        animation-delay: 0.6s;
+      }
+      #ending .extra {
+        animation-delay: 3.4s;
+      }
+      #ending .sign {
+        animation-delay: 4s;
+      }
+
+      svg {
+        width: 100%;
+        height: auto;
+        margin-top: 8px;
+        overflow: visible;
+      }
+
+      /* stems draw themselves */
+      .stem {
+        stroke: #7fa877;
+        stroke-width: 3;
+        stroke-linecap: round;
+        fill: none;
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        animation: draw 1.2s ease-out forwards;
+        animation-delay: var(--d, 0.8s);
+      }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      /* flowers pop open */
+      .bloom {
+        transform-box: fill-box;
+        transform-origin: center;
+        transform: scale(0);
+        animation: bloom 0.8s cubic-bezier(0.3, 1.6, 0.5, 1) forwards;
+        animation-delay: var(--d, 1.8s);
+      }
+      @keyframes bloom {
+        to {
+          transform: scale(1);
+        }
+      }
+
+      /* giraffe peeks up from the bottom */
+      .giraffe {
+        transform: translateY(260px);
+        animation: peek 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) 2.6s forwards;
+      }
+      @keyframes peek {
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      /* latte slides in from the right */
+      .latte {
+        transform: translateX(160px);
+        opacity: 0;
+        animation: slide 1.2s ease-out 2.2s forwards;
+      }
+      @keyframes slide {
+        to {
+          transform: none;
+          opacity: 1;
+        }
+      }
+
+      /* steam floats up forever */
+      .steam {
+        stroke: var(--paper);
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        fill: none;
+        opacity: 0;
+        animation: steam 3s ease-in-out infinite;
+      }
+      .steam:nth-of-type(2) {
+        animation-delay: 1s;
+      }
+      .steam:nth-of-type(3) {
+        animation-delay: 2s;
+      }
+      @keyframes steam {
+        0% {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        40% {
+          opacity: 0.6;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-14px);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01s !important;
+          animation-delay: 0s !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p id="word" class="pop">Salam.</p>
+    <div id="hint">tap</div>
+
+    <!-- Hidden until the last tap -->
+    <div id="ending" hidden>
+      <h1>I know I'm a bit far…</h1>
+      <h1><em>here are some flowers.</em></h1>
+
+      <svg
+        viewBox="0 0 400 350"
+        aria-label="Flowers, a vanilla latte, and a giraffe"
+      >
+        <defs>
+          <!-- One flower shape, reused with different colors -->
+          <symbol id="flower" viewBox="-20 -20 40 40">
+            <g fill="currentColor">
+              <ellipse cx="0" cy="-10" rx="6" ry="10" />
+              <ellipse cx="0" cy="-10" rx="6" ry="10" transform="rotate(60)" />
+              <ellipse cx="0" cy="-10" rx="6" ry="10" transform="rotate(120)" />
+              <ellipse cx="0" cy="-10" rx="6" ry="10" transform="rotate(180)" />
+              <ellipse cx="0" cy="-10" rx="6" ry="10" transform="rotate(240)" />
+              <ellipse cx="0" cy="-10" rx="6" ry="10" transform="rotate(300)" />
+            </g>
+            <circle r="5.5" fill="#f6d37e" />
+          </symbol>
+        </defs>
+
+        <!-- ground -->
+        <line
+          x1="0"
+          y1="338"
+          x2="400"
+          y2="338"
+          stroke="#a69dba"
+          stroke-opacity="0.25"
+        />
+
+        <!-- ===== Giraffe ===== -->
+        <g class="giraffe">
+          <path d="M18 340 L76 340 L110 150 L88 140 Z" fill="#e9b04f" />
+          <path
+            d="M86 146 L22 334"
+            stroke="#b8742a"
+            stroke-width="5"
+            stroke-dasharray="4 4"
+          />
+          <ellipse cx="54" cy="300" rx="9" ry="7" fill="#b8742a" />
+          <ellipse cx="70" cy="252" rx="8" ry="6" fill="#b8742a" />
+          <ellipse cx="83" cy="206" rx="7" ry="6" fill="#b8742a" />
+          <ellipse cx="94" cy="170" rx="6" ry="5" fill="#b8742a" />
+          <ellipse cx="44" cy="325" rx="6" ry="5" fill="#b8742a" />
+          <!-- horns -->
+          <line
+            x1="96"
+            y1="122"
+            x2="92"
+            y2="104"
+            stroke="#b8742a"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+          <line
+            x1="105"
+            y1="121"
+            x2="105"
+            y2="103"
+            stroke="#b8742a"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+          <circle cx="92" cy="103" r="4.5" fill="#8a5420" />
+          <circle cx="105" cy="102" r="4.5" fill="#8a5420" />
+          <!-- ear, head, snout -->
+          <ellipse
+            cx="86"
+            cy="128"
+            rx="10"
+            ry="4.5"
+            fill="#e9b04f"
+            transform="rotate(-25 86 128)"
+          />
+          <ellipse cx="104" cy="134" rx="22" ry="14" fill="#e9b04f" />
+          <ellipse cx="122" cy="139" rx="11" ry="9.5" fill="#f3cf8a" />
+          <circle cx="126" cy="137" r="1.6" fill="#8a5420" />
+          <circle cx="105" cy="129" r="2.8" fill="#2a1f1a" />
+          <path
+            d="M113 145 q5 3 10 0"
+            stroke="#8a5420"
+            stroke-width="1.5"
+            fill="none"
+            stroke-linecap="round"
+          />
+        </g>
+
+        <!-- ===== Bouquet ===== -->
+        <path
+          class="stem"
+          pathLength="1"
+          d="M200 272 Q190 210 150 150"
+          style="--d: 0.8s"
+        />
+        <path
+          class="stem"
+          pathLength="1"
+          d="M200 272 Q195 200 185 118"
+          style="--d: 0.9s"
+        />
+        <path
+          class="stem"
+          pathLength="1"
+          d="M200 272 Q208 190 218 108"
+          style="--d: 1s"
+        />
+        <path
+          class="stem"
+          pathLength="1"
+          d="M200 272 Q215 210 252 146"
+          style="--d: 1.1s"
+        />
+        <path
+          class="stem"
+          pathLength="1"
+          d="M200 272 Q200 220 201 170"
+          style="--d: 1.2s"
+        />
+        <path
+          class="stem"
+          pathLength="1"
+          d="M200 272 Q185 230 166 194"
+          style="--d: 1.3s"
+        />
+        <path
+          class="stem"
+          pathLength="1"
+          d="M200 272 Q215 230 238 190"
+          style="--d: 1.4s"
+        />
+
+        <use
+          class="bloom"
+          href="#flower"
+          x="132"
+          y="132"
+          width="36"
+          height="36"
+          style="color: #f4a6b8; --d: 1.8s"
+        />
+        <use
+          class="bloom"
+          href="#flower"
+          x="167"
+          y="100"
+          width="36"
+          height="36"
+          style="color: #c9a9ec; --d: 1.9s"
+        />
+        <use
+          class="bloom"
+          href="#flower"
+          x="200"
+          y="90"
+          width="36"
+          height="36"
+          style="color: #f29a7a; --d: 2s"
+        />
+        <use
+          class="bloom"
+          href="#flower"
+          x="234"
+          y="128"
+          width="36"
+          height="36"
+          style="color: #fbe3e8; --d: 2.1s"
+        />
+        <use
+          class="bloom"
+          href="#flower"
+          x="183"
+          y="152"
+          width="36"
+          height="36"
+          style="color: #f6c1d8; --d: 2.2s"
+        />
+        <use
+          class="bloom"
+          href="#flower"
+          x="150"
+          y="178"
+          width="32"
+          height="32"
+          style="color: #f7d29a; --d: 2.3s"
+        />
+        <use
+          class="bloom"
+          href="#flower"
+          x="222"
+          y="174"
+          width="32"
+          height="32"
+          style="color: #e1708f; --d: 2.4s"
+        />
+
+        <!-- vase -->
+        <path d="M170 268 L230 268 L222 338 L178 338 Z" fill="#8fb3c9" />
+        <rect x="168" y="262" width="64" height="9" rx="4" fill="#a9c6d8" />
+
+        <!-- ===== Vanilla latte ===== -->
+        <g class="latte">
+          <path class="steam" d="M308 256 q-7 -10 0 -20 q7 -10 0 -20" />
+          <path class="steam" d="M322 252 q-7 -10 0 -20 q7 -10 0 -20" />
+          <path class="steam" d="M336 256 q-7 -10 0 -20 q7 -10 0 -20" />
+          <ellipse cx="322" cy="334" rx="52" ry="7" fill="#e7ddd0" />
+          <path
+            d="M357 282 q24 0 18 20 q-5 13 -22 10"
+            stroke="#fbf6ef"
+            stroke-width="7"
+            fill="none"
+          />
+          <path
+            d="M285 270 L359 270 L351 322 Q322 334 293 322 Z"
+            fill="#fbf6ef"
+          />
+          <ellipse cx="322" cy="270" rx="37" ry="7" fill="#c89a6b" />
+          <path
+            d="M322 274 c-8 -5 -9 -10 -4 -11 c2 0 3 1 4 3 c1 -2 2 -3 4 -3 c5 1 4 6 -4 11 Z"
+            fill="#f4e3cc"
+          />
+          <text
+            x="322"
+            y="304"
+            text-anchor="middle"
+            font-family="Caveat, cursive"
+            font-size="18"
+            fill="#c89a6b"
+          >
+            vanilla
+          </text>
+        </g>
+      </svg>
+
+      <p class="extra">+ a vanilla latte. + a giraffe.</p>
+      <p class="sign">— Omar</p>
+    </div>
+
+    <script>
+      const words = [
+        "Salam.",
+        "You are doing amazing.",
+        "Masters Program...",
+        "Teaching...",
+        "Working...",
+        "I know you barely eat but your plate is loaded.",
+        "I'm proud of you.",
+      ];
+      let i = 0;
+
+      const word = document.getElementById("word");
+      const ending = document.getElementById("ending");
+      const hint = document.getElementById("hint");
+
+      document.addEventListener("click", () => {
+        if (i < words.length - 1) {
+          i++;
+          word.textContent = words[i];
+
+          // restart the fade-in animation
+          word.classList.remove("pop");
+          void word.offsetWidth;
+          word.classList.add("pop");
+        } else {
+          // last tap: hide the words, show the ending
+          word.hidden = true;
+          hint.hidden = true;
+          ending.hidden = false;
+        }
+      });
+    </script>
+  </body>
+</html>
